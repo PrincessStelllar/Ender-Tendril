@@ -1,5 +1,6 @@
 package net.silentchaos512.endertendril.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -15,6 +16,7 @@ import net.silentchaos512.endertendril.setup.ModBlocks;
 import net.silentchaos512.endertendril.setup.ModTags;
 
 public class EnderTendrilBlock extends GrowingPlantBodyBlock {
+    public static final MapCodec<EnderTendrilBlock> CODEC = simpleCodec(EnderTendrilBlock::new);
     public static final VoxelShape SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 16.0D, 15.0D);
 
     public EnderTendrilBlock(Properties builder) {
@@ -37,6 +39,11 @@ public class EnderTendrilBlock extends GrowingPlantBodyBlock {
 
     private Block getFloweringPlant() {
         return ModBlocks.FLOWERING_ENDER_TENDRIL.get();
+    }
+
+    @Override
+    protected MapCodec<? extends GrowingPlantBodyBlock> codec() {
+        return CODEC;
     }
 
     @Override

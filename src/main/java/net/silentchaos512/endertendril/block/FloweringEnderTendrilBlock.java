@@ -1,21 +1,29 @@
 package net.silentchaos512.endertendril.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.GrowingPlantBodyBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
 
 public class FloweringEnderTendrilBlock extends EnderTendrilBlock {
+    public static final MapCodec<FloweringEnderTendrilBlock> CODEC = simpleCodec(FloweringEnderTendrilBlock::new);
     public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
 
     public FloweringEnderTendrilBlock(Properties builder) {
         super(builder);
         registerDefaultState(defaultBlockState().setValue(AGE, 0));
+    }
+
+    @Override
+    protected MapCodec<? extends GrowingPlantBodyBlock> codec() {
+        return CODEC;
     }
 
     @Override
@@ -52,9 +60,9 @@ public class FloweringEnderTendrilBlock extends EnderTendrilBlock {
         int i = this.getAge(state);
         if (i < this.getMaxAge()) {
             float f = 1f;
-            if (ForgeHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
+            if (CommonHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
                 worldIn.setBlock(pos, this.withAge(i + 1), 2);
-                ForgeHooks.onCropsGrowPost(worldIn, pos, state);
+                CommonHooks.onCropsGrowPost(worldIn, pos, state);
             }
         }
     }

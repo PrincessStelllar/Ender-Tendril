@@ -2,8 +2,8 @@ package net.silentchaos512.endertendril.data;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.tags.ItemTagsProvider;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.silentchaos512.endertendril.EnderTendrilMod;
 import net.silentchaos512.endertendril.setup.ModItems;
 

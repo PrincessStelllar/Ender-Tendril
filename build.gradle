@@ -1,22 +1,24 @@
-buildscript {
-    repositories {
-        maven { url = 'https://files.minecraftforge.net/maven' }
-        jcenter()
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '6.+', changing: true
-    }
-}
-
 plugins {
+    id 'java-library'
+    id 'eclipse'
+    id 'idea'
     id 'maven-publish'
+    id 'net.neoforged.gradle.userdev' version '7.0.97'
     id "com.matthewprenger.cursegradle" version "1.4.0"
+    id "com.modrinth.minotaur" version "2.+"
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'idea'
-apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle'
+javadoc.options.addStringOption('Xdoclint:none', '-quiet')
+
+version = mod_version
+group = mod_group_id
+var archiveNameNeo = "${repo_name}-${minecraft_version}-neoforge"
+base {
+    archivesName = archiveNameNeo
+}
+
+System.out.println("Version: ${version}")
+System.out.println("Archive: ${base.archivesName}")
 
 repositories {
     flatDir {
@@ -24,139 +26,119 @@ repositories {
         dirs "repo"
     }
     mavenLocal()
-    jcenter()
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
-    options.compilerArgs = ['-Xlint:deprecation']
-}
-
-javadoc {
-    failOnError = false
-}
-
-archivesBaseName = project.archivesBaseName
-def versionInfo = getModVersion()
-System.out.println(versionInfo)
-def version_short = "${versionInfo['version_short']}"
-version = "${versionInfo['version']}"
-
-def gpr_creds = { // Credentials for GitHub Packages, since this is used multiple times
-    username = property('gpr.username')
-    password = property('gpr.token')
-}
-
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-minecraft {
-    mappings channel: 'official', version: mc_version
-    copyIdeResources = true
+runs {
+    // applies to all the run configs below
+    configureEach {
+        // Recommended logging data for a userdev environment
+        // The markers can be added/remove as needed separated by commas.
+        // "SCAN": For mods scan.
+        // "REGISTRIES": For firing of registry events.
+        // "REGISTRYDUMP": For getting the contents of all registries.
+        systemProperty 'forge.logging.markers', 'REGISTRIES'
 
-    runs {
-        client {
-            workingDirectory project.file('run')
+        // Recommended logging level for the console
+        // You can set various levels here.
+        // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
+        systemProperty 'forge.logging.console.level', 'debug'
 
-            property 'forge.logging.console.level', 'debug'
+        modSource project.sourceSets.main
+    }
 
-            mods {
-                endertendril {
-                    source sourceSets.main
-                }
-            }
-        }
+    client {
+        // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
 
-        server {
-            workingDirectory project.file('run')
+    server {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+        programArgument '--nogui'
+    }
 
-            property 'forge.logging.console.level', 'debug'
+    // This run config launches GameTestServer and runs all registered gametests, then exits.
+    // By default, the server will crash when no gametests are provided.
+    // The gametest system is also enabled by default for other run configs under the /test command.
+    gameTestServer {
+        systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
+    }
 
-            mods {
-                endertendril {
-                    source sourceSets.main
-                }
-            }
-        }
+    data {
+        // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
+        // workingDirectory project.file('run-data')
 
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', project.mod_id, '--all',
-                    '--existing', file('src/main/resources').toString(),
-                    '--existing', file('src/generated/resources').toString(),
-                    '--output', file('src/generated/resources/')
-
-            mods {
-                endertendril {
-                    source sourceSets.main
-                }
-            }
-        }
+        // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
+        programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
     }
 }
 
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
+// Include resources generated by data generators.
+sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    jcenter()
+    def gpr_creds = {
+        username = property('gpr.username')
+        password = property('gpr.token')
+    }
+
     mavenLocal()
-    // Silent Lib
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
     maven {
         url = uri("https://maven.pkg.github.com/silentchaos512/silentlib")
         credentials gpr_creds
     }
     maven {
-        url = uri("https://maven.pkg.github.com/silentchaos512/silent-utils")
-        credentials gpr_creds
-    }
-    // JEI
-    maven {
-        name = "Progwml6 maven"
-        url = "https://dvs1.progwml6.com/files/maven/"
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
     }
     maven {
+        // location of a maven mirror for JEI files, as a fallback
         name = "ModMaven"
-        url = "https://modmaven.k-4u.nl"
-    }
-    // Curios
-    maven {
-        url = "https://maven.theillusivec4.top/"
-    }
-    maven {
-        url 'https://maven.mcmoddev.com'
+        url = "https://modmaven.dev"
     }
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:${project.forge_version}"
+    implementation "net.neoforged:neoforge:${neo_version}"
 
-    runtimeOnly fg.deobf("net.silentchaos512:silent-lib:${project.sl_version}") {
-        exclude module: "forge"
-    }
+    implementation("net.silentchaos512:silent-lib-${minecraft_version}-neoforge:${project.silentlib_version}")
 
     // JEI
-    if (project.hasProperty('jei_version')) {
+    if (project.hasProperty("jei_version")) {
         // compile against the JEI API but do not include it at runtime
-        compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}"))
-        compileOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}"))
-        // at runtime, use the full JEI jar for Forge
-        runtimeOnly(fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}"))
+        compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+        compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+        // at runtime, use the full JEI jar for NeoForge
+        runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
     }
 }
 
-jar {
-    manifest {
-        attributes(["Specification-Title"     : project.mod_id,
-                    "Specification-Vendor"    : "SilentChaos512",
-                    "Specification-Version"   : "1",
-                    "Implementation-Title"    : project.name,
-                    "Implementation-Vendor"   : "SilentChaos512",
-                    "Implementation-Version"  : version_short,
-                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")],)
+// This block of code expands all declared replace properties in the specified resource targets.
+// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
+// When "copyIdeResources" is enabled, this will also run before the game launches in IDE environments.
+// See https://docs.gradle.org/current/dsl/org.gradle.language.jvm.tasks.ProcessResources.html
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version, minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version, neo_version_range: neo_version_range,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
+            mod_authors            : mod_authors, mod_description: mod_description,
+            issue_tracker_url      : issue_tracker_url, display_url: display_url,
+            silentlib_version_range: silentlib_version_range
+    ]
+    inputs.properties replaceProperties
+
+    filesMatching(['META-INF/mods.toml']) {
+        expand replaceProperties + [project: project]
     }
 }
 
@@ -171,22 +153,33 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 }
 
 artifacts {
-    archives javadocJar
     archives sourcesJar
+    archives javadocJar
 }
 
-curseforge {
-    if (project.hasProperty('cf_project_id') && project.hasProperty('cf_release_type') && project.hasProperty('cf_changelog_filename') &&
-            ((project.cf_release_type == 'alpha') || (project.cf_release_type == 'beta') || (project.cf_release_type == 'release'))) {
+if (project.hasProperty('curseforge.apiKey')) {
+    curseforge {
         apiKey = property('curseforge.apiKey')
         project {
             id = project.cf_project_id
             changelog = file(project.cf_changelog_filename)
-            releaseType = project.cf_release_type
-            addGameVersion(project.mc_version)
+            releaseType = project.release_type
+            addGameVersion(project.minecraft_version)
             mainArtifact(jar) {
             }
         }
+    }
+}
+
+if (project.hasProperty('modrinth_token')) {
+    modrinth {
+        token = property('modrinth.token')
+        projectId = project.mr_project_id
+        versionNumber = project.mod_version
+        versionType = project.release_type
+        uploadFile = jar
+        gameVersions = [project.minecraft_version]
+        loaders = ["neoforge"]
     }
 }
 
@@ -196,12 +189,16 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/silentchaos512/${project.repoName}")
-            credentials gpr_creds
+            url = uri("https://maven.pkg.github.com/silentchaos512/${project.repo_name}")
+            credentials {
+                username = property('gpr.username')
+                password = property('gpr.token')
+            }
         }
     }
     publications {
         gpr(MavenPublication) {
+            artifactId = archiveNameNeo
             from(components.java)
             artifact sourcesJar
             artifact javadocJar
@@ -209,58 +206,11 @@ publishing {
     }
 }
 
-// Version stuff
-
-def getModVersion() {
-    try {
-        return getGitVersion()
-    } catch (Exception ex) {
-        System.out.println("Git version failed, falling back to gradle.properties")
-        return makeVersionMap(project.build_version)
-    }
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs = ['-Xlint:deprecation']
 }
 
-def getGitVersion() {
-    // Call git command
-    def outStream = new ByteArrayOutputStream()
-    def result = exec {
-        executable = 'git'
-        args = ['describe', '--long']
-        standardOutput = outStream
-    }
-
-    def fullVersion = outStream.toString()
-    return makeVersionMap(fullVersion)
-}
-
-def getGitHash() {
-    def outStream = new ByteArrayOutputStream()
-    def result = exec {
-        executable = 'git'
-        args = ['rev-parse', 'HEAD']
-        standardOutput = outStream
-    }
-
-    return outStream.toString().trim().substring(0, 6)
-}
-
-def makeVersionMap(version) {
-    def matcher = version.trim() =~ /(\d+).(\d+).(\d+)/
-
-    def maj = matcher[0][1]
-    def min = matcher[0][2]
-    def rev = matcher[0][3]
-
-    return makeVersionMap(maj, min, rev, matcher[0][4])
-}
-
-def makeVersionMap(maj, min, rev, githash) {
-    def out = [:]
-    out['build.major.number'] = maj.toString()
-    out['build.minor.number'] = min.toString()
-    out['build.revision.number'] = rev.toString()
-    out['build.githash'] = githash
-    out['version_short'] = "${maj}.${min}.${rev}".toString()
-    out['version'] = "${project.mc_version}-${maj}.${min}.${rev}".toString()
-    return out
+javadoc {
+    failOnError = false
 }

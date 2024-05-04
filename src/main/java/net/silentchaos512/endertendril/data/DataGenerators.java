@@ -2,9 +2,9 @@ package net.silentchaos512.endertendril.data;
 
 import net.minecraft.data.DataGenerator;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.common.data.GlobalLootModifierProvider;
-import net.minecraftforge.data.event.GatherDataEvent;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.common.data.GlobalLootModifierProvider;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.silentchaos512.endertendril.EnderTendrilMod;
 import net.silentchaos512.endertendril.loot.ChestInjectorLootModifier;
 

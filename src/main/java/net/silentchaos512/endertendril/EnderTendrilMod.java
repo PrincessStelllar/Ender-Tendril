@@ -2,11 +2,8 @@ package net.silentchaos512.endertendril;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
-import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.common.Mod;
 import net.silentchaos512.endertendril.data.DataGenerators;
 import net.silentchaos512.endertendril.setup.Registration;
 import org.apache.logging.log4j.LogManager;
@@ -23,24 +20,10 @@ public final class EnderTendrilMod {
     public static final Random RANDOM = new Random();
     public static final RandomSource RANDOM_SOURCE = RandomSource.create();
 
-    public EnderTendrilMod() {
-        DistExecutor.safeRunForDist(() -> SideProxy.Client::new, () -> SideProxy.Server::new);
-
-        Registration.register();
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(DataGenerators::gatherData);
+    public EnderTendrilMod(IEventBus modEventBus) {
+        Registration.register(modEventBus);
+        modEventBus.addListener(DataGenerators::gatherData);
     }
-
-    public static String getVersion() {
-        return ModList.get().getModContainerById(MOD_ID)
-                .map(c -> c.getModInfo().getVersion().toString())
-                .orElse("INVALID"); // Should not happen
-    }
-
-    public static boolean isDevBuild() {
-        return "NONE".equals(getVersion()) || !FMLLoader.isProduction();
-    }
-
 
     public static ResourceLocation getId(String path) {
         return new ResourceLocation(MOD_ID, path);

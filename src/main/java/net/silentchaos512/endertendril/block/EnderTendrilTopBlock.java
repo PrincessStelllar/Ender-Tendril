@@ -1,5 +1,6 @@
 package net.silentchaos512.endertendril.block;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,11 +15,12 @@ import net.minecraft.world.level.block.NetherVines;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ForgeHooks;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.silentchaos512.endertendril.setup.ModBlocks;
 import net.silentchaos512.endertendril.setup.ModTags;
 
 public class EnderTendrilTopBlock extends GrowingPlantHeadBlock {
+    public static final MapCodec<EnderTendrilTopBlock> CODEC = simpleCodec(EnderTendrilTopBlock::new);
     private static final VoxelShape SHAPE = Block.box(4.0D, 9.0D, 4.0D, 12.0D, 16.0D, 12.0D);
     private static final double GROWTH_CHANCE = 0.05;
 
@@ -42,6 +44,11 @@ public class EnderTendrilTopBlock extends GrowingPlantHeadBlock {
     }
 
     @Override
+    protected MapCodec<? extends GrowingPlantHeadBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
     public boolean isRandomlyTicking(BlockState state) {
         // Never stop growing as long as space is available
         return true;
@@ -50,11 +57,11 @@ public class EnderTendrilTopBlock extends GrowingPlantHeadBlock {
     @Override
     public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
         // Removes the age check from super
-        if (ForgeHooks.onCropsGrowPre(worldIn, pos.relative(this.growthDirection), worldIn.getBlockState(pos.relative(this.growthDirection)),random.nextDouble() < GROWTH_CHANCE)) {
+        if (CommonHooks.onCropsGrowPre(worldIn, pos.relative(this.growthDirection), worldIn.getBlockState(pos.relative(this.growthDirection)),random.nextDouble() < GROWTH_CHANCE)) {
             BlockPos blockpos = pos.relative(this.growthDirection);
             if (this.canGrowInto(worldIn.getBlockState(blockpos))) {
                 worldIn.setBlockAndUpdate(blockpos, state.cycle(AGE));
-                ForgeHooks.onCropsGrowPost(worldIn, blockpos, worldIn.getBlockState(blockpos));
+                CommonHooks.onCropsGrowPost(worldIn, blockpos, worldIn.getBlockState(blockpos));
             }
         }
     }

@@ -16,7 +16,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredHolder;
 import net.silentchaos512.endertendril.block.FloweringEnderTendrilBlock;
 import net.silentchaos512.endertendril.setup.ModBlocks;
 import net.silentchaos512.endertendril.setup.ModItems;
@@ -80,7 +80,7 @@ public class ModLootTables extends LootTableProvider {
         @Override
         protected Iterable<Block> getKnownBlocks() {
             return Registration.BLOCKS.getEntries().stream()
-                    .map(RegistryObject::get)
+                    .map(DeferredHolder::get)
                     .collect(Collectors.toList());
         }
     }

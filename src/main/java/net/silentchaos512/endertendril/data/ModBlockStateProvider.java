@@ -1,10 +1,10 @@
 package net.silentchaos512.endertendril.data;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.client.model.generators.BlockStateProvider;
-import net.minecraftforge.client.model.generators.ConfiguredModel;
-import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.silentchaos512.endertendril.EnderTendrilMod;
 import net.silentchaos512.endertendril.block.FloweringEnderTendrilBlock;
 import net.silentchaos512.endertendril.setup.ModBlocks;
