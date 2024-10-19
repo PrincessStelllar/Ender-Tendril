@@ -11,10 +11,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.silentchaos512.endertendril.EnderTendrilConfig;
 
 public class FloweringEnderTendrilBlock extends EnderTendrilBlock {
     public static final MapCodec<FloweringEnderTendrilBlock> CODEC = simpleCodec(FloweringEnderTendrilBlock::new);
     public static final IntegerProperty AGE = BlockStateProperties.AGE_15;
+    public static final double GROWTH_CHANCE = 0.04;
 
     public FloweringEnderTendrilBlock(Properties builder) {
         super(builder);
@@ -24,6 +26,10 @@ public class FloweringEnderTendrilBlock extends EnderTendrilBlock {
     @Override
     protected MapCodec<? extends GrowingPlantBodyBlock> codec() {
         return CODEC;
+    }
+
+    private double getGrowthChance() {
+        return GROWTH_CHANCE * EnderTendrilConfig.COMMON.tendrilGrowthSpeedMultiplier.get();
     }
 
     @Override
@@ -58,8 +64,7 @@ public class FloweringEnderTendrilBlock extends EnderTendrilBlock {
 
         int i = this.getAge(state);
         if (i < this.getMaxAge()) {
-            float f = 1f;
-            if (CommonHooks.canCropGrow(worldIn, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
+            if (CommonHooks.canCropGrow(worldIn, pos, state, random.nextDouble() < getGrowthChance())) {
                 worldIn.setBlock(pos, this.withAge(i + 1), 2);
                 CommonHooks.fireCropGrowPost(worldIn, pos, state);
             }

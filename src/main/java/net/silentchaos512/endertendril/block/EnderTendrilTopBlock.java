@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.silentchaos512.endertendril.EnderTendrilConfig;
 import net.silentchaos512.endertendril.setup.ModBlocks;
 import net.silentchaos512.endertendril.setup.ModTags;
 
@@ -48,6 +49,10 @@ public class EnderTendrilTopBlock extends GrowingPlantHeadBlock {
         return CODEC;
     }
 
+    private double getGrowthChance() {
+        return GROWTH_CHANCE * EnderTendrilConfig.COMMON.tendrilGrowthSpeedMultiplier.get();
+    }
+
     @Override
     public boolean isRandomlyTicking(BlockState state) {
         // Never stop growing as long as space is available
@@ -57,11 +62,12 @@ public class EnderTendrilTopBlock extends GrowingPlantHeadBlock {
     @Override
     public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
         // Removes the age check from super
-        if (CommonHooks.canCropGrow(worldIn, pos.relative(this.growthDirection), worldIn.getBlockState(pos.relative(this.growthDirection)),random.nextDouble() < GROWTH_CHANCE)) {
-            BlockPos blockpos = pos.relative(this.growthDirection);
-            if (this.canGrowInto(worldIn.getBlockState(blockpos))) {
-                worldIn.setBlockAndUpdate(blockpos, state.cycle(AGE));
-                CommonHooks.fireCropGrowPost(worldIn, blockpos, worldIn.getBlockState(blockpos));
+        var targetPos = pos.relative(this.growthDirection);
+        var targetBlockState = worldIn.getBlockState(targetPos);
+        if (CommonHooks.canCropGrow(worldIn, targetPos, targetBlockState,random.nextDouble() < getGrowthChance())) {
+            if (this.canGrowInto(targetBlockState)) {
+                worldIn.setBlockAndUpdate(targetPos, state.cycle(AGE));
+                CommonHooks.fireCropGrowPost(worldIn, targetPos, targetBlockState);
             }
         }
     }

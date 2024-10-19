@@ -2,8 +2,13 @@ package net.silentchaos512.endertendril;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLLoader;
+import net.silentchaos512.endertendril.client.EnderTendrilClient;
 import net.silentchaos512.endertendril.data.DataGenerators;
 import net.silentchaos512.endertendril.setup.Registration;
 import org.apache.logging.log4j.LogManager;
@@ -20,9 +25,14 @@ public final class EnderTendrilMod {
     public static final Random RANDOM = new Random();
     public static final RandomSource RANDOM_SOURCE = RandomSource.create();
 
-    public EnderTendrilMod(IEventBus modEventBus) {
+    public EnderTendrilMod(IEventBus modEventBus, ModContainer modContainer) {
         Registration.register(modEventBus);
         modEventBus.addListener(DataGenerators::gatherData);
+        modContainer.registerConfig(ModConfig.Type.COMMON, EnderTendrilConfig.COMMON_SPEC);
+
+        if (FMLLoader.getDist() == Dist.CLIENT) {
+            new EnderTendrilClient(modContainer);
+        }
     }
 
     public static ResourceLocation getId(String path) {
