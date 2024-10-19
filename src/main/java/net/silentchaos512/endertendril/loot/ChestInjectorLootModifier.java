@@ -3,6 +3,7 @@ package net.silentchaos512.endertendril.loot;
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.resources.ResourceLocation;
@@ -20,18 +21,19 @@ import java.util.function.Supplier;
 
 public class ChestInjectorLootModifier extends LootModifier {
     private static final Map<ResourceLocation, Float> SEED_CHANCE = ImmutableMap.<ResourceLocation, Float>builder()
-            .put(BuiltInLootTables.ABANDONED_MINESHAFT, 1f / 3f)
-            .put(BuiltInLootTables.BASTION_TREASURE, 2f / 3f)
-            .put(BuiltInLootTables.BURIED_TREASURE, 1f / 3f)
-            .put(BuiltInLootTables.END_CITY_TREASURE, 2f / 3f)
-            .put(BuiltInLootTables.JUNGLE_TEMPLE, 1f / 3f)
-            .put(BuiltInLootTables.SHIPWRECK_TREASURE, 1f / 3f)
-            .put(BuiltInLootTables.STRONGHOLD_CORRIDOR, 2f / 3f)
-            .put(BuiltInLootTables.STRONGHOLD_CROSSING, 3f / 5f)
+            .put(BuiltInLootTables.ABANDONED_MINESHAFT.location(), 1f / 3f)
+            .put(BuiltInLootTables.BASTION_TREASURE.location(), 2f / 3f)
+            .put(BuiltInLootTables.BURIED_TREASURE.location(), 1f / 3f)
+            .put(BuiltInLootTables.END_CITY_TREASURE.location(), 2f / 3f)
+            .put(BuiltInLootTables.JUNGLE_TEMPLE.location(), 1f / 3f)
+            .put(BuiltInLootTables.SHIPWRECK_TREASURE.location(), 1f / 3f)
+            .put(BuiltInLootTables.STRONGHOLD_CORRIDOR.location(), 2f / 3f)
+            .put(BuiltInLootTables.STRONGHOLD_CROSSING.location(), 3f / 5f)
+            .put(ResourceLocation.fromNamespaceAndPath("treasurebags", "bags/ender"), 1f / 5f)
             .build();
 
-    public static final Supplier<Codec<ChestInjectorLootModifier>> CODEC = Suppliers.memoize(() ->
-            RecordCodecBuilder.create(inst ->
+    public static final Supplier<MapCodec<ChestInjectorLootModifier>> CODEC = Suppliers.memoize(() ->
+            RecordCodecBuilder.mapCodec(inst ->
                     codecStart(inst).apply(inst, ChestInjectorLootModifier::new)
             )
     );
@@ -52,7 +54,7 @@ public class ChestInjectorLootModifier extends LootModifier {
     }
 
     @Override
-    public Codec<? extends IGlobalLootModifier> codec() {
+    public MapCodec<? extends IGlobalLootModifier> codec() {
         return CODEC.get();
     }
 }

@@ -52,7 +52,6 @@ public class FloweringEnderTendrilBlock extends EnderTendrilBlock {
         return !isMaxAge(state);
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
         if (!worldIn.isAreaLoaded(pos, 1)) return;
@@ -60,9 +59,9 @@ public class FloweringEnderTendrilBlock extends EnderTendrilBlock {
         int i = this.getAge(state);
         if (i < this.getMaxAge()) {
             float f = 1f;
-            if (CommonHooks.onCropsGrowPre(worldIn, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
+            if (CommonHooks.canCropGrow(worldIn, pos, state, random.nextInt((int) (25.0F / f) + 1) == 0)) {
                 worldIn.setBlock(pos, this.withAge(i + 1), 2);
-                CommonHooks.onCropsGrowPost(worldIn, pos, state);
+                CommonHooks.fireCropGrowPost(worldIn, pos, state);
             }
         }
     }

@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "endertendril:tendril_pearl"
-            ]
+            "items": "endertendril:tendril_pearl"
           }
         ]
       },
@@ -22,14 +20,13 @@
   },
   "requirements": [
     [
-      "has_item",
-      "has_the_recipe"
+      "has_the_recipe",
+      "has_item"
     ]
   ],
   "rewards": {
     "recipes": [
       "endertendril:ender_eye"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

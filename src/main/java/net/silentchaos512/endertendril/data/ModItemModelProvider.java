@@ -20,7 +20,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        ModelFile itemGenerated = getExistingFile(new ResourceLocation("item/generated"));
+        ModelFile itemGenerated = getExistingFile(ResourceLocation.withDefaultNamespace("item/generated"));
 
         simpleBuilder(ModItems.ENDER_TENDRIL_SEED, itemGenerated);
         simpleBuilder(ModItems.TENDRIL_PEARL, itemGenerated);

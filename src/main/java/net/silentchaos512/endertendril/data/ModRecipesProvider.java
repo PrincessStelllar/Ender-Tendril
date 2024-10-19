@@ -1,5 +1,6 @@
 package net.silentchaos512.endertendril.data;
 
+import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -9,9 +10,11 @@ import net.minecraft.world.item.Items;
 import net.silentchaos512.endertendril.EnderTendrilMod;
 import net.silentchaos512.endertendril.setup.ModItems;
 
+import java.util.concurrent.CompletableFuture;
+
 public class ModRecipesProvider extends RecipeProvider {
-    public ModRecipesProvider(PackOutput packOutput) {
-        super(packOutput);
+    public ModRecipesProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(packOutput, lookupProvider);
     }
 
     @Override

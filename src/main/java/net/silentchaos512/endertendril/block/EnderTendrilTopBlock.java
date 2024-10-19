@@ -57,11 +57,11 @@ public class EnderTendrilTopBlock extends GrowingPlantHeadBlock {
     @Override
     public void randomTick(BlockState state, ServerLevel worldIn, BlockPos pos, RandomSource random) {
         // Removes the age check from super
-        if (CommonHooks.onCropsGrowPre(worldIn, pos.relative(this.growthDirection), worldIn.getBlockState(pos.relative(this.growthDirection)),random.nextDouble() < GROWTH_CHANCE)) {
+        if (CommonHooks.canCropGrow(worldIn, pos.relative(this.growthDirection), worldIn.getBlockState(pos.relative(this.growthDirection)),random.nextDouble() < GROWTH_CHANCE)) {
             BlockPos blockpos = pos.relative(this.growthDirection);
             if (this.canGrowInto(worldIn.getBlockState(blockpos))) {
                 worldIn.setBlockAndUpdate(blockpos, state.cycle(AGE));
-                CommonHooks.onCropsGrowPost(worldIn, blockpos, worldIn.getBlockState(blockpos));
+                CommonHooks.fireCropGrowPost(worldIn, blockpos, worldIn.getBlockState(blockpos));
             }
         }
     }

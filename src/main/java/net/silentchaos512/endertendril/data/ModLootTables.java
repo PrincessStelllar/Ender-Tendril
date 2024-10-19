@@ -2,12 +2,15 @@ package net.silentchaos512.endertendril.data;
 
 import com.google.common.collect.ImmutableList;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.data.loot.packs.VanillaChestLoot;
 import net.minecraft.data.loot.packs.VanillaLootTableProvider;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.*;
@@ -25,30 +28,35 @@ import net.silentchaos512.endertendril.setup.Registration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class ModLootTables extends LootTableProvider {
-    public ModLootTables(PackOutput packOutput) {
-        super(packOutput, Collections.emptySet(), VanillaLootTableProvider.create(packOutput).getTables());
-    }
-
-    @Override
-    public List<SubProviderEntry> getTables() {
-        return ImmutableList.of(
-                new SubProviderEntry(Blocks::new, LootContextParamSets.BLOCK),
-                new SubProviderEntry(Chests::new, LootContextParamSets.CHEST)
+    public ModLootTables(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider) {
+        super(
+                packOutput,
+                Collections.emptySet(),
+                VanillaLootTableProvider.create(packOutput, lookupProvider).getTables(),
+                lookupProvider
         );
     }
 
     @Override
-    protected void validate(Map<ResourceLocation, LootTable> map, ValidationContext validationcontext) {
-        map.forEach((name, lootTable) -> lootTable.validate(validationcontext.setParams(lootTable.getParamSet()).enterElement("{" + name + "}", new LootDataId<>(LootDataType.TABLE, name))));
+    public List<SubProviderEntry> getTables() {
+        return List.of(
+                new SubProviderEntry(Blocks::new, LootContextParamSets.BLOCK)
+        );
+    }
+
+    @Override
+    protected void validate(WritableRegistry<LootTable> writableregistry, ValidationContext validationcontext, ProblemReporter.Collector problemreporter$collector) {
+        // Don't validate against built-in tables
     }
 
     private static final class Blocks extends BlockLootSubProvider {
-        public Blocks() {
-            super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags());
+        public Blocks(HolderLookup.Provider lookupProvider) {
+            super(Collections.emptySet(), FeatureFlags.REGISTRY.allFlags(), lookupProvider);
         }
 
         @Override
@@ -82,12 +90,6 @@ public class ModLootTables extends LootTableProvider {
             return Registration.BLOCKS.getEntries().stream()
                     .map(DeferredHolder::get)
                     .collect(Collectors.toList());
-        }
-    }
-
-    private static final class Chests extends VanillaChestLoot {
-        @Override
-        public void generate(BiConsumer<ResourceLocation, LootTable.Builder> consumer) {
         }
     }
 }
