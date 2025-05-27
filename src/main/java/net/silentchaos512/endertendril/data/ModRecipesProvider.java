@@ -16,7 +16,7 @@ public class ModRecipesProvider extends LibRecipeProvider {
     @Override
     protected void buildRecipes() {
         shapeless(RecipeCategory.MISC, Items.ENDER_EYE)
-                .requires(ModItems.TENDRIL_PEARL.get(), 2)
+                .requires(ModItems.TENDRIL_PEARL.get())
                 .requires(Items.BLAZE_POWDER)
                 .unlockedBy("has_item", has(ModItems.TENDRIL_PEARL.get()))
                 .save(this.output, modId("ender_eye"));

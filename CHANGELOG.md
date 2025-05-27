@@ -5,8 +5,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.21.5-1.8.0] - Unreleased
 - Ported to NeoForge 1.21.5
+### Added
+- A recipe to craft ender pearls (for when other mods' recipes do not use tags correctly)
+- Seeds can now appear in ancient city chests
+### Changed
+- Ender eye recipe now requires only one tendril pearl
 - Tweak block textures
-- Added a recipe to craft ender pearls (for when other mods' recipes do not use tags correctly)
 
 ## [1.21.1-1.7.0] - 2024-10-19
 - Ported to NeoForge 1.21.1 (supports 1.21 too)
