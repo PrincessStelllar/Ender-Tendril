@@ -3,11 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.21.5-1.8.0] - Unreleased
+## [1.21.5-1.8.0] - 2025-05-27
 - Ported to NeoForge 1.21.5
 ### Added
 - A recipe to craft ender pearls (for when other mods' recipes do not use tags correctly)
 - Seeds can now appear in ancient city chests
+- Inverted ender tendrils, which spawn in The End and drop a single seed when broken.
 ### Changed
 - Ender eye recipe now requires only one tendril pearl
 - Tweak block textures

@@ -34,5 +34,7 @@ public final class DataGenerators {
                 add("chest_loot_injector", new ChestInjectorLootModifier(new LootItemCondition[]{}));
             }
         });
+
+        gen.addProvider(true, new ModWorldGenGenerator(packOutput, lookupProvider).createRunner());
     }
 }

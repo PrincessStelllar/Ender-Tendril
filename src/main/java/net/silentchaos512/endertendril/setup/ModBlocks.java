@@ -8,6 +8,7 @@ import net.silentchaos512.endertendril.EnderTendrilMod;
 import net.silentchaos512.endertendril.block.EnderTendrilBlock;
 import net.silentchaos512.endertendril.block.EnderTendrilTopBlock;
 import net.silentchaos512.endertendril.block.FloweringEnderTendrilBlock;
+import net.silentchaos512.endertendril.block.InvertedEnderTendrilBlock;
 
 public final class ModBlocks {
     public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(EnderTendrilMod.MOD_ID);
@@ -34,6 +35,14 @@ public final class ModBlocks {
             FloweringEnderTendrilBlock::new,
             BlockBehaviour.Properties.of()
                     .randomTicks()
+                    .noCollission()
+                    .instabreak()
+                    .sound(SoundType.WEEPING_VINES)
+    );
+    public static final DeferredBlock<InvertedEnderTendrilBlock> INVERTED_ENDER_TENDRIL = BLOCKS.registerBlock(
+            "inverted_ender_tendril",
+            InvertedEnderTendrilBlock::new,
+            BlockBehaviour.Properties.of()
                     .noCollission()
                     .instabreak()
                     .sound(SoundType.WEEPING_VINES)

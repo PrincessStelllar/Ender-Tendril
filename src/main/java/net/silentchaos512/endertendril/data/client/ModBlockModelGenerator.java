@@ -26,6 +26,7 @@ public class ModBlockModelGenerator extends BlockModelGenerators {
         createCrossBlock(ModBlocks.ENDER_TENDRIL.get(), PlantType.NOT_TINTED);
         createCrossBlock(ModBlocks.ENDER_TENDRIL_PLANT.get(), PlantType.NOT_TINTED);
         createFloweringTendril(ModBlocks.FLOWERING_ENDER_TENDRIL.get());
+        createCrossBlock(ModBlocks.INVERTED_ENDER_TENDRIL.get(), PlantType.NOT_TINTED);
     }
 
     private void createFloweringTendril(FloweringEnderTendrilBlock block) {

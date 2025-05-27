@@ -55,6 +55,7 @@ public class ModLootTables extends LootTableProvider {
 
         @Override
         protected void generate() {
+            dropOther(ModBlocks.INVERTED_ENDER_TENDRIL.get(), ModItems.ENDER_TENDRIL_SEED.get());
             dropOther(ModBlocks.ENDER_TENDRIL.get(), ModItems.ENDER_TENDRIL_SEED.get());
             add(ModBlocks.ENDER_TENDRIL_PLANT.get(), LootTable.lootTable());
 

@@ -25,6 +25,7 @@ public class EnderTendrilClient {
         setRenderLayer(ModBlocks.ENDER_TENDRIL, cutout);
         setRenderLayer(ModBlocks.ENDER_TENDRIL_PLANT, cutout);
         setRenderLayer(ModBlocks.FLOWERING_ENDER_TENDRIL, cutout);
+        setRenderLayer(ModBlocks.INVERTED_ENDER_TENDRIL, cutout);
     }
 
     @SuppressWarnings("deprecation")
