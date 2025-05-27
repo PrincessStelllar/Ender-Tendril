@@ -1,4 +1,4 @@
-package net.silentchaos512.endertendril.data;
+package net.silentchaos512.endertendril.data.tag;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.tags.ItemTagsProvider;
@@ -9,7 +9,7 @@ import net.silentchaos512.endertendril.setup.ModItems;
 
 public class ModItemTagsProvider extends ItemTagsProvider {
     public ModItemTagsProvider(GatherDataEvent event, ModBlockTagsProvider blocks) {
-        super(event.getGenerator().getPackOutput(), event.getLookupProvider(), blocks.contentsGetter(), EnderTendrilMod.MOD_ID, event.getExistingFileHelper());
+        super(event.getGenerator().getPackOutput(), event.getLookupProvider(), blocks.contentsGetter(), EnderTendrilMod.MOD_ID);
     }
 
     @Override

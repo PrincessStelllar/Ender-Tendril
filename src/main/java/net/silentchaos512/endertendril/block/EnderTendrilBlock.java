@@ -7,6 +7,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GrowingPlantBodyBlock;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
@@ -47,11 +48,11 @@ public class EnderTendrilBlock extends GrowingPlantBodyBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (facing == this.growthDirection.getOpposite() && !stateIn.canSurvive(worldIn, currentPos)) {
-            worldIn.scheduleTick(currentPos, this, 1);
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos currentPos, Direction facing, BlockPos p_53918_, BlockState p_53915_, RandomSource p_374442_) {
+        if (facing == this.growthDirection.getOpposite() && !state.canSurvive(level, currentPos)) {
+            scheduledTickAccess.scheduleTick(currentPos, this, 1);
         }
-        return stateIn;
+        return state;
     }
 
     @Override
