@@ -10,7 +10,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.silentchaos512.endertendril.EnderTendrilMod;
 import net.silentchaos512.endertendril.item.EnderTendrilSeedItem;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(EnderTendrilMod.MOD_ID);
 

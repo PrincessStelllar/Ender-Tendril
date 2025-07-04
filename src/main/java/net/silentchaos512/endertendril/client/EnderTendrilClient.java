@@ -1,7 +1,7 @@
 package net.silentchaos512.endertendril.client;
 
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -21,7 +21,7 @@ public class EnderTendrilClient {
     }
 
     private void setRenderTypes() {
-        RenderType cutout = RenderType.CUTOUT;
+        ChunkSectionLayer cutout = ChunkSectionLayer.CUTOUT;
         setRenderLayer(ModBlocks.ENDER_TENDRIL, cutout);
         setRenderLayer(ModBlocks.ENDER_TENDRIL_PLANT, cutout);
         setRenderLayer(ModBlocks.FLOWERING_ENDER_TENDRIL, cutout);
@@ -29,7 +29,7 @@ public class EnderTendrilClient {
     }
 
     @SuppressWarnings("deprecation")
-    private void setRenderLayer(DeferredBlock<?> block, RenderType renderType) {
+    private void setRenderLayer(DeferredBlock<?> block, ChunkSectionLayer renderType) {
         ItemBlockRenderTypes.setRenderLayer(block.get(), renderType);
     }
 }
