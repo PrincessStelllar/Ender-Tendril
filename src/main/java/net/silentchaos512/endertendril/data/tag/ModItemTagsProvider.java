@@ -1,15 +1,18 @@
-package net.silentchaos512.endertendril.data;
+package net.silentchaos512.endertendril.data.tag;
 
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.silentchaos512.endertendril.EnderTendrilMod;
 import net.silentchaos512.endertendril.setup.ModItems;
 
-public class ModItemTagsProvider extends ItemTagsProvider {
+public class ModItemTagsProvider extends IntrinsicHolderTagsProvider<Item> {
     public ModItemTagsProvider(GatherDataEvent event, ModBlockTagsProvider blocks) {
-        super(event.getGenerator().getPackOutput(), event.getLookupProvider(), blocks.contentsGetter(), EnderTendrilMod.MOD_ID, event.getExistingFileHelper());
+        //noinspection deprecation
+        super(event.getGenerator().getPackOutput(), Registries.ITEM, event.getLookupProvider(), item -> item.builtInRegistryHolder().key(), EnderTendrilMod.MOD_ID);
     }
 
     @Override

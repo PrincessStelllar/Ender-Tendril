@@ -31,7 +31,7 @@ public final class EnderTendrilMod {
         modContainer.registerConfig(ModConfig.Type.COMMON, EnderTendrilConfig.COMMON_SPEC);
 
         if (FMLLoader.getDist() == Dist.CLIENT) {
-            new EnderTendrilClient(modContainer);
+            new EnderTendrilClient(modEventBus, modContainer);
         }
     }
 

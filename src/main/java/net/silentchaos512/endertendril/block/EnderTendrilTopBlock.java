@@ -5,10 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.NetherVines;
@@ -92,19 +89,19 @@ public class EnderTendrilTopBlock extends GrowingPlantHeadBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (facing == this.growthDirection.getOpposite() && !stateIn.canSurvive(worldIn, currentPos)) {
-            worldIn.scheduleTick(currentPos, this, 1);
+    protected BlockState updateShape(BlockState state, LevelReader level, ScheduledTickAccess scheduledTickAccess, BlockPos currentPos, Direction facing, BlockPos p_53956_, BlockState facingState, RandomSource p_374560_) {
+        if (facing == this.growthDirection.getOpposite() && !state.canSurvive(level, currentPos)) {
+            scheduledTickAccess.scheduleTick(currentPos, this, 1);
         }
 
         if (facing == this.growthDirection && facingState.is(this)) {
-            return this.getGrownBlock(worldIn, currentPos);
+            return this.getGrownBlock(level, currentPos);
         } else {
             if (this.scheduleFluidTicks) {
-                worldIn.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+                scheduledTickAccess.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
             }
 
-            return stateIn;
+            return state;
         }
     }
 

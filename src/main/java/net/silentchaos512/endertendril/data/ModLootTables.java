@@ -1,15 +1,12 @@
 package net.silentchaos512.endertendril.data;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.data.loot.packs.VanillaChestLoot;
 import net.minecraft.data.loot.packs.VanillaLootTableProvider;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
@@ -23,13 +20,10 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.silentchaos512.endertendril.block.FloweringEnderTendrilBlock;
 import net.silentchaos512.endertendril.setup.ModBlocks;
 import net.silentchaos512.endertendril.setup.ModItems;
-import net.silentchaos512.endertendril.setup.Registration;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 public class ModLootTables extends LootTableProvider {
@@ -61,6 +55,7 @@ public class ModLootTables extends LootTableProvider {
 
         @Override
         protected void generate() {
+            dropOther(ModBlocks.INVERTED_ENDER_TENDRIL.get(), ModItems.ENDER_TENDRIL_SEED.get());
             dropOther(ModBlocks.ENDER_TENDRIL.get(), ModItems.ENDER_TENDRIL_SEED.get());
             add(ModBlocks.ENDER_TENDRIL_PLANT.get(), LootTable.lootTable());
 
@@ -87,7 +82,7 @@ public class ModLootTables extends LootTableProvider {
 
         @Override
         protected Iterable<Block> getKnownBlocks() {
-            return Registration.BLOCKS.getEntries().stream()
+            return ModBlocks.BLOCKS.getEntries().stream()
                     .map(DeferredHolder::get)
                     .collect(Collectors.toList());
         }

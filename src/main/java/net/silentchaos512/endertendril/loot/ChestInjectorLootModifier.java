@@ -2,7 +2,6 @@ package net.silentchaos512.endertendril.loot;
 
 import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableMap;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -29,6 +28,7 @@ public class ChestInjectorLootModifier extends LootModifier {
             .put(BuiltInLootTables.SHIPWRECK_TREASURE.location(), 1f / 3f)
             .put(BuiltInLootTables.STRONGHOLD_CORRIDOR.location(), 2f / 3f)
             .put(BuiltInLootTables.STRONGHOLD_CROSSING.location(), 3f / 5f)
+            .put(BuiltInLootTables.ANCIENT_CITY.location(), 3f / 5f)
             .put(ResourceLocation.fromNamespaceAndPath("treasurebags", "bags/ender"), 1f / 5f)
             .build();
 
