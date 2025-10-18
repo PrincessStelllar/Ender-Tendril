@@ -7,6 +7,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLLoader;
 import net.silentchaos512.endertendril.client.EnderTendrilClient;
 import net.silentchaos512.endertendril.data.DataGenerators;
@@ -30,7 +31,7 @@ public final class EnderTendrilMod {
         modEventBus.addListener(DataGenerators::gatherData);
         modContainer.registerConfig(ModConfig.Type.COMMON, EnderTendrilConfig.COMMON_SPEC);
 
-        if (FMLLoader.getDist() == Dist.CLIENT) {
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
             new EnderTendrilClient(modEventBus, modContainer);
         }
     }

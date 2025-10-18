@@ -18,7 +18,7 @@ public final class ModBlocks {
             EnderTendrilTopBlock::new,
             BlockBehaviour.Properties.of()
                     .randomTicks()
-                    .noCollission()
+                    .noCollision()
                     .instabreak()
                     .sound(SoundType.WEEPING_VINES)
     );
@@ -26,7 +26,7 @@ public final class ModBlocks {
             "ender_tendril_plant",
             EnderTendrilBlock::new,
             BlockBehaviour.Properties.of()
-                    .noCollission()
+                    .noCollision()
                     .instabreak()
                     .sound(SoundType.WEEPING_VINES)
     );
@@ -35,7 +35,7 @@ public final class ModBlocks {
             FloweringEnderTendrilBlock::new,
             BlockBehaviour.Properties.of()
                     .randomTicks()
-                    .noCollission()
+                    .noCollision()
                     .instabreak()
                     .sound(SoundType.WEEPING_VINES)
     );
@@ -43,7 +43,7 @@ public final class ModBlocks {
             "inverted_ender_tendril",
             InvertedEnderTendrilBlock::new,
             BlockBehaviour.Properties.of()
-                    .noCollission()
+                    .noCollision()
                     .instabreak()
                     .sound(SoundType.WEEPING_VINES)
     );
